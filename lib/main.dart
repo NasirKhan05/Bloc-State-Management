@@ -1,10 +1,13 @@
 import 'package:block_state_examples/bloc/counter/counter_bloc.dart';
+import 'package:block_state_examples/bloc/favourites_app/favourites_app_bloc.dart';
 import 'package:block_state_examples/bloc/images_picker/images_picker_bloc.dart';
 import 'package:block_state_examples/bloc/posts/posts_bloc.dart';
 import 'package:block_state_examples/bloc/switch_examples/switch_bloc.dart';
 import 'package:block_state_examples/bloc/todo/to_do_bloc.dart';
+import 'package:block_state_examples/repository/favourite_repository.dart';
 import 'package:block_state_examples/ui/counters/counter_screen.dart';
 import 'package:block_state_examples/equatable_testing.dart';
+import 'package:block_state_examples/ui/favourite_app/favourite_app_screen.dart';
 import 'package:block_state_examples/ui/image_picker/image_picker_screen.dart';
 import 'package:block_state_examples/ui/post/post_screen.dart';
 import 'package:block_state_examples/ui/switch_example/switch_example_screen.dart';
@@ -24,8 +27,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      themeMode: ThemeMode.dark,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        brightness: Brightness.dark,
+        useMaterial3: true
       ),
       home: MultiBlocProvider(
         providers: [
@@ -34,8 +39,9 @@ class MyApp extends StatelessWidget {
           BlocProvider(create: (_) => ImagePickerBloc(ImagePickerUtils())),
           BlocProvider(create: (_) => ToDoBloc()),
           BlocProvider(create: (_) => PostBloc()),
+          BlocProvider(create: (_) => FavouriteBloc(FavouriteRepository())),
         ],
-        child: const PostScreen(),
+        child: FavouriteAppScreen(),
       ),
     );
   }
