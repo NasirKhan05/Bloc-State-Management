@@ -34,14 +34,13 @@ class MyApp extends StatelessWidget {
       ),
       home: MultiBlocProvider(
         providers: [
-          BlocProvider(create: (_) => CounterBloc()),
           BlocProvider(create: (_) => SwitchBloc()),
           BlocProvider(create: (_) => ImagePickerBloc(ImagePickerUtils())),
           BlocProvider(create: (_) => ToDoBloc()),
           BlocProvider(create: (_) => PostBloc()),
           BlocProvider(create: (_) => FavouriteBloc(FavouriteRepository())),
         ],
-        child: PostScreen(),
+        child: CounterScreen(),
       ),
     );
   }

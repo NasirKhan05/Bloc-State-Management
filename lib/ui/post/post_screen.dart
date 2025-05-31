@@ -1,3 +1,5 @@
+import 'package:block_state_examples/bloc/counter/counter_bloc.dart';
+import 'package:block_state_examples/bloc/counter/counter_state.dart';
 import 'package:block_state_examples/bloc/posts/posts_bloc.dart';
 import 'package:block_state_examples/bloc/posts/posts_event.dart';
 import 'package:block_state_examples/bloc/posts/posts_state.dart';
@@ -26,6 +28,18 @@ class _PostScreenState extends State<PostScreen> {
         title: Text('Post Api With BlocState'),
         centerTitle: true,
         backgroundColor: Colors.deepPurple,
+        actions: [
+          BlocBuilder<CounterBloc, CounterState>(
+            builder: (context, state) {
+              return Center(
+                child: Text(
+                  state.counter.toString(),
+                  style: TextStyle(color: Colors.black, fontSize: 60),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: BlocBuilder<PostBloc, PostsState>(
         builder: (context, state) {
@@ -43,7 +57,12 @@ class _PostScreenState extends State<PostScreen> {
                       decoration: InputDecoration(
                         hintText: 'Enter Email',
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15), bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10))
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(15),
+                            topRight: Radius.circular(15),
+                            bottomLeft: Radius.circular(10),
+                            bottomRight: Radius.circular(10),
+                          ),
                         ),
                         suffixIcon: Icon(Icons.search),
                       ),
@@ -53,37 +72,40 @@ class _PostScreenState extends State<PostScreen> {
                     ),
                   ),
                   Expanded(
-                    child: state.searchMessage.isNotEmpty ?
-                    Center(child: Text(state.searchMessage.toString())) :
-                    ListView.builder(
-                      itemCount:
-                          state.temPostList.isEmpty
-                              ? state.postList.length
-                              : state.temPostList.length,
-                      itemBuilder: (context, index) {
-                        if (state.temPostList.isNotEmpty) {
-                          final item = state.temPostList[index];
-                          return Card(
-                            child: ListTile(
-                              leading: Text(item.postId.toString()),
-                              title: Text(item.email.toString()),
-                              subtitle: Text(item.body.toString()),
-                              trailing: Text(item.id.toString()),
+                    child:
+                        state.searchMessage.isNotEmpty
+                            ? Center(
+                              child: Text(state.searchMessage.toString()),
+                            )
+                            : ListView.builder(
+                              itemCount:
+                                  state.temPostList.isEmpty
+                                      ? state.postList.length
+                                      : state.temPostList.length,
+                              itemBuilder: (context, index) {
+                                if (state.temPostList.isNotEmpty) {
+                                  final item = state.temPostList[index];
+                                  return Card(
+                                    child: ListTile(
+                                      leading: Text(item.postId.toString()),
+                                      title: Text(item.email.toString()),
+                                      subtitle: Text(item.body.toString()),
+                                      trailing: Text(item.id.toString()),
+                                    ),
+                                  );
+                                } else {
+                                  final item = state.postList[index];
+                                  return Card(
+                                    child: ListTile(
+                                      leading: Text(item.postId.toString()),
+                                      title: Text(item.email.toString()),
+                                      subtitle: Text(item.body.toString()),
+                                      trailing: Text(item.id.toString()),
+                                    ),
+                                  );
+                                }
+                              },
                             ),
-                          );
-                        } else {
-                          final item = state.postList[index];
-                          return Card(
-                            child: ListTile(
-                              leading: Text(item.postId.toString()),
-                              title: Text(item.email.toString()),
-                              subtitle: Text(item.body.toString()),
-                              trailing: Text(item.id.toString()),
-                            ),
-                          );
-                        }
-                      },
-                    ),
                   ),
                 ],
               );
