@@ -1,4 +1,3 @@
-
 import 'package:block_state_examples/bloc/posts/posts_bloc.dart';
 import 'package:block_state_examples/bloc/posts/posts_event.dart';
 import 'package:block_state_examples/bloc/posts/posts_state.dart';
@@ -14,7 +13,6 @@ class PostScreen extends StatefulWidget {
 }
 
 class _PostScreenState extends State<PostScreen> {
-
   @override
   void initState() {
     super.initState();
@@ -27,30 +25,70 @@ class _PostScreenState extends State<PostScreen> {
       appBar: AppBar(
         title: Text('Post Api With BlocState'),
         centerTitle: true,
-         backgroundColor: Colors.deepPurple,
+        backgroundColor: Colors.deepPurple,
       ),
       body: BlocBuilder<PostBloc, PostsState>(
-          builder: (context, state){
-            switch(state.postStatus){
-              case PostStatus.loading:
-                return Center(child: CircularProgressIndicator());
-              case PostStatus.failure:
-                return Center(child: Text(state.message.toString()));
-              case PostStatus.success:
-                return ListView.builder(
-                  itemCount: state.postList.length,
-                    itemBuilder: (context, index){
-                    final item = state.postList[index];
-                    return ListTile(
-                      leading: Text(item.postId.toString()),
-                      title: Text(item.email.toString()),
-                      subtitle: Text(item.body.toString()),
-                      trailing: Text(item.id.toString()),
-                    );
-                    }
-                );
-            }
+        builder: (context, state) {
+          switch (state.postStatus) {
+            case PostStatus.loading:
+              return Center(child: CircularProgressIndicator());
+            case PostStatus.failure:
+              return Center(child: Text(state.message.toString()));
+            case PostStatus.success:
+              return Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 3, right: 10, left: 10),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        hintText: 'Enter Email',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15), bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10))
+                        ),
+                        suffixIcon: Icon(Icons.search),
+                      ),
+                      onChanged: (filterKey) {
+                        context.read<PostBloc>().add(SearchItem(filterKey));
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: state.searchMessage.isNotEmpty ?
+                    Center(child: Text(state.searchMessage.toString())) :
+                    ListView.builder(
+                      itemCount:
+                          state.temPostList.isEmpty
+                              ? state.postList.length
+                              : state.temPostList.length,
+                      itemBuilder: (context, index) {
+                        if (state.temPostList.isNotEmpty) {
+                          final item = state.temPostList[index];
+                          return Card(
+                            child: ListTile(
+                              leading: Text(item.postId.toString()),
+                              title: Text(item.email.toString()),
+                              subtitle: Text(item.body.toString()),
+                              trailing: Text(item.id.toString()),
+                            ),
+                          );
+                        } else {
+                          final item = state.postList[index];
+                          return Card(
+                            child: ListTile(
+                              leading: Text(item.postId.toString()),
+                              title: Text(item.email.toString()),
+                              subtitle: Text(item.body.toString()),
+                              trailing: Text(item.id.toString()),
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              );
           }
+        },
       ),
     );
   }

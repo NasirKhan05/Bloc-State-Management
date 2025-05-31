@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
           BlocProvider(create: (_) => PostBloc()),
           BlocProvider(create: (_) => FavouriteBloc(FavouriteRepository())),
         ],
-        child: FavouriteAppScreen(),
+        child: PostScreen(),
       ),
     );
   }
